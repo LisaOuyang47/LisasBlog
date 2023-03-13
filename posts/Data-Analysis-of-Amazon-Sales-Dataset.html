@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>lisasblog – data-analysis-of-amazon-sales-dataset</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">lisasblog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
+<p>This Amazon sales dataset contains reviews and ratings for information on over a thousand products. In the dataset, product IDs, names, categories, product descriptions, links to product photos and links to their official websites are listed; various prices (before, after, and percentages of discounts) are also available; and finally, users’ ratings and reviews of the products they purchased, including their personal information (IDs and names) are also included in this dataset.</p>
+</section>
+<section id="data-source" class="level3">
+<h3 class="anchored" data-anchor-id="data-source">Data Source</h3>
+<p><strong>Amazon Sales Dataset</strong> came from <a href="https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset">Kaggle website</a>. This dataset was scraped from the official Amazon website via BeautifulSoup and WebDriver in Python by KARKAVELRAJA J (owner).</p>
+</section>
+<section id="motivations" class="level3">
+<h3 class="anchored" data-anchor-id="motivations">Motivations</h3>
+<p>Out of personal interest, I am personally more interested in the relationship between consumer behavior and corporate behaviors in the marketplace. This is especially true for a multinational company as large as Amazon, which has a business that spans basically the entire world. When a company of this size can operate successfully, the idea of analyzing its sales data is something that nobody can resist. And because of my passion for digital humanities, I think it is a very worthwhile thing to do sentiment analysis on Amazon’s user reviews. Not only can we understand certain specific needs of users, but we can also have predictions about consumer behavior, which contributes to the company’s ability to better improve on a humanistic basis, thus boosting sales and stabilizing its customer base.</p>
+</section>
+<section id="research-questions" class="level3">
+<h3 class="anchored" data-anchor-id="research-questions">Research Questions</h3>
+<p>(Might change based on findings)</p>
+<p>Based on the data set and my interests, I decided to focus my interest in solving the following problems: - <strong>What are the most popular categories of products?</strong></p>
+<p><em>a. What is the overall sentiment of users towards such products? What is particularly noteworthy?</em></p>
+<ul>
+<li><strong>What is the relationship between product price and user rating?</strong></li>
+</ul>
+<p><em>a. Are there cases in which prices are manipulated (price increase, then price decrease) to gain sales for profit?</em></p>
+<ul>
+<li><strong>What is the overall sentiment of the user? How can we learn about e-commerce through user reviews?</strong></li>
+</ul>
+</section>
+</section>
+<section id="exploratory-data-analysis" class="level1">
+<h1>Exploratory Data Analysis</h1>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import dataset and data preprocessing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://github.com/LisaOuyang47/DH140-final-project/raw/main/amazon.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>product_id</th>
+      <th>product_name</th>
+      <th>category</th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+      <th>about_product</th>
+      <th>user_id</th>
+      <th>user_name</th>
+      <th>review_id</th>
+      <th>review_title</th>
+      <th>review_content</th>
+      <th>img_link</th>
+      <th>product_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>B07JW9H4J1</td>
+      <td>Wayona Nylon Braided USB to Lightning Fast Cha...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹399</td>
+      <td>₹1,099</td>
+      <td>64%</td>
+      <td>4.2</td>
+      <td>24,269</td>
+      <td>High Compatibility : Compatible With iPhone 12...</td>
+      <td>AG3D6O4STAQKAY2UVGEUV46KN35Q,AHMY5CWJMMK5BJRBB...</td>
+      <td>Manav,Adarsh gupta,Sundeep,S.Sayeed Ahmed,jasp...</td>
+      <td>R3HXWT0LRP0NMF,R2AJM3LFTLZHFO,R6AQJGUP6P86,R1K...</td>
+      <td>Satisfied,Charging is really fast,Value for mo...</td>
+      <td>Looks durable Charging is fine tooNo complains...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Wayona-Braided-WN3LG1-Sy...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B098NS6PVG</td>
+      <td>Ambrane Unbreakable 60W / 3A Fast Charging 1.5...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹199</td>
+      <td>₹349</td>
+      <td>43%</td>
+      <td>4.0</td>
+      <td>43,994</td>
+      <td>Compatible with all Type C enabled devices, be...</td>
+      <td>AECPFYFQVRUWC3KGNLJIOREFP5LQ,AGYYVPDD7YG7FYNBX...</td>
+      <td>ArdKn,Nirbhay kumar,Sagar Viswanathan,Asp,Plac...</td>
+      <td>RGIQEG07R9HS2,R1SMWZQ86XIN8U,R2J3Y1WL29GWDE,RY...</td>
+      <td>A Good Braided Cable for Your Type C Device,Go...</td>
+      <td>I ordered this cable to connect my phone to An...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Ambrane-Unbreakable-Char...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>B096MSW6CT</td>
+      <td>Sounce Fast Phone Charging Cable &amp; Data Sync U...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹199</td>
+      <td>₹1,899</td>
+      <td>90%</td>
+      <td>3.9</td>
+      <td>7,928</td>
+      <td>【 Fast Charger&amp; Data Sync】-With built-in safet...</td>
+      <td>AGU3BBQ2V2DDAMOAKGFAWDDQ6QHA,AESFLDV2PT363T2AQ...</td>
+      <td>Kunal,Himanshu,viswanath,sai niharka,saqib mal...</td>
+      <td>R3J3EQQ9TZI5ZJ,R3E7WBGK7ID0KV,RWU79XKQ6I1QF,R2...</td>
+      <td>Good speed for earlier versions,Good Product,W...</td>
+      <td>Not quite durable and sturdy,https://m.media-a...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Sounce-iPhone-Charging-C...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>B08HDJ86NZ</td>
+      <td>boAt Deuce USB 300 2 in 1 Type-C &amp; Micro USB S...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹329</td>
+      <td>₹699</td>
+      <td>53%</td>
+      <td>4.2</td>
+      <td>94,363</td>
+      <td>The boAt Deuce USB 300 2 in 1 cable is compati...</td>
+      <td>AEWAZDZZJLQUYVOVGBEUKSLXHQ5A,AG5HTSFRRE6NL3M5S...</td>
+      <td>Omkar dhale,JD,HEMALATHA,Ajwadh a.,amar singh ...</td>
+      <td>R3EEUZKKK9J36I,R3HJVYCLYOY554,REDECAZ7AMPQC,R1...</td>
+      <td>Good product,Good one,Nice,Really nice product...</td>
+      <td>Good product,long wire,Charges good,Nice,I bou...</td>
+      <td>https://m.media-amazon.com/images/I/41V5FtEWPk...</td>
+      <td>https://www.amazon.in/Deuce-300-Resistant-Tang...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>B08CF3B7N1</td>
+      <td>Portronics Konnect L 1.2M Fast Charging 3A 8 P...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹154</td>
+      <td>₹399</td>
+      <td>61%</td>
+      <td>4.2</td>
+      <td>16,905</td>
+      <td>[CHARGE &amp; SYNC FUNCTION]- This cable comes wit...</td>
+      <td>AE3Q6KSUK5P75D5HFYHCRAOLODSA,AFUGIFH5ZAFXRDSZH...</td>
+      <td>rahuls6099,Swasat Borah,Ajay Wadke,Pranali,RVK...</td>
+      <td>R1BP4L2HH9TFUP,R16PVJEXKV6QZS,R2UPDB81N66T4P,R...</td>
+      <td>As good as original,Decent,Good one for second...</td>
+      <td>Bought this instead of original apple, does th...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Portronics-Konnect-POR-1...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>(1465, 16)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 1465 entries, 0 to 1464
+Data columns (total 16 columns):
+ #   Column               Non-Null Count  Dtype 
+---  ------               --------------  ----- 
+ 0   product_id           1465 non-null   object
+ 1   product_name         1465 non-null   object
+ 2   category             1465 non-null   object
+ 3   discounted_price     1465 non-null   object
+ 4   actual_price         1465 non-null   object
+ 5   discount_percentage  1465 non-null   object
+ 6   rating               1465 non-null   object
+ 7   rating_count         1463 non-null   object
+ 8   about_product        1465 non-null   object
+ 9   user_id              1465 non-null   object
+ 10  user_name            1465 non-null   object
+ 11  review_id            1465 non-null   object
+ 12  review_title         1465 non-null   object
+ 13  review_content       1465 non-null   object
+ 14  img_link             1465 non-null   object
+ 15  product_link         1465 non-null   object
+dtypes: object(16)
+memory usage: 183.2+ KB</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check missing value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df.isnull().<span class="bu">any</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>product_id             False
+product_name           False
+category               False
+discounted_price       False
+actual_price           False
+discount_percentage    False
+rating                 False
+rating_count            True
+about_product          False
+user_id                False
+user_name              False
+review_id              False
+review_title           False
+review_content         False
+img_link               False
+product_link           False
+dtype: bool</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'rating_count'</span>].isnull()]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>product_id</th>
+      <th>product_name</th>
+      <th>category</th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+      <th>about_product</th>
+      <th>user_id</th>
+      <th>user_name</th>
+      <th>review_id</th>
+      <th>review_title</th>
+      <th>review_content</th>
+      <th>img_link</th>
+      <th>product_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>282</th>
+      <td>B0B94JPY2N</td>
+      <td>Amazon Brand - Solimo 65W Fast Charging Braide...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹199</td>
+      <td>₹999</td>
+      <td>80%</td>
+      <td>3.0</td>
+      <td>NaN</td>
+      <td>USB C to C Cable: This cable has type C connec...</td>
+      <td>AE7CFHY23VAJT2FI4NZKKP6GS2UQ</td>
+      <td>Pranav</td>
+      <td>RUB7U91HVZ30</td>
+      <td>The cable works but is not 65W as advertised</td>
+      <td>I have a pd supported car charger and I bought...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Amazon-Brand-Charging-Su...</td>
+    </tr>
+    <tr>
+      <th>324</th>
+      <td>B0BQRJ3C47</td>
+      <td>REDTECH USB-C to Lightning Cable 3.3FT, [Apple...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>₹249</td>
+      <td>₹999</td>
+      <td>75%</td>
+      <td>5.0</td>
+      <td>NaN</td>
+      <td>💎[The Fastest Charge] - This iPhone USB C cabl...</td>
+      <td>AGJC5O5H5BBXWUV7WRIEIOOR3TVQ</td>
+      <td>Abdul Gafur</td>
+      <td>RQXD5SAMMPC6L</td>
+      <td>Awesome Product</td>
+      <td>Quick delivery.Awesome ProductPacking was good...</td>
+      <td>https://m.media-amazon.com/images/I/31-q0xhaTA...</td>
+      <td>https://www.amazon.in/REDTECH-Lightning-Certif...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.drop([<span class="dv">282</span>,<span class="dv">324</span>],inplace <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'rating_count'</span>].isnull()]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>product_id</th>
+      <th>product_name</th>
+      <th>category</th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+      <th>about_product</th>
+      <th>user_id</th>
+      <th>user_name</th>
+      <th>review_id</th>
+      <th>review_title</th>
+      <th>review_content</th>
+      <th>img_link</th>
+      <th>product_link</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the data type of prices, rating, rating_count, and discount percentage to int/float</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># replace unnecessary characters</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'discounted_price'</span>] <span class="op">=</span> df[<span class="st">'discounted_price'</span>].<span class="bu">str</span>.replace(<span class="st">'₹'</span>, <span class="st">''</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'discounted_price'</span>] <span class="op">=</span> df[<span class="st">'discounted_price'</span>].<span class="bu">str</span>.replace(<span class="st">','</span>, <span class="st">''</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'actual_price'</span>] <span class="op">=</span> df[<span class="st">'actual_price'</span>].<span class="bu">str</span>.replace(<span class="st">'₹'</span>, <span class="st">''</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'actual_price'</span>] <span class="op">=</span> df[<span class="st">'actual_price'</span>].<span class="bu">str</span>.replace(<span class="st">','</span>, <span class="st">''</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'rating_count'</span>] <span class="op">=</span> df[<span class="st">'rating_count'</span>].<span class="bu">str</span>.replace(<span class="st">','</span>, <span class="st">''</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'discount_percentage'</span>] <span class="op">=</span> df[<span class="st">'discount_percentage'</span>].<span class="bu">str</span>.replace(<span class="st">'%'</span>, <span class="st">''</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>product_id</th>
+      <th>product_name</th>
+      <th>category</th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+      <th>about_product</th>
+      <th>user_id</th>
+      <th>user_name</th>
+      <th>review_id</th>
+      <th>review_title</th>
+      <th>review_content</th>
+      <th>img_link</th>
+      <th>product_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>B07JW9H4J1</td>
+      <td>Wayona Nylon Braided USB to Lightning Fast Cha...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>399</td>
+      <td>1099</td>
+      <td>64</td>
+      <td>4.2</td>
+      <td>24269</td>
+      <td>High Compatibility : Compatible With iPhone 12...</td>
+      <td>AG3D6O4STAQKAY2UVGEUV46KN35Q,AHMY5CWJMMK5BJRBB...</td>
+      <td>Manav,Adarsh gupta,Sundeep,S.Sayeed Ahmed,jasp...</td>
+      <td>R3HXWT0LRP0NMF,R2AJM3LFTLZHFO,R6AQJGUP6P86,R1K...</td>
+      <td>Satisfied,Charging is really fast,Value for mo...</td>
+      <td>Looks durable Charging is fine tooNo complains...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Wayona-Braided-WN3LG1-Sy...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B098NS6PVG</td>
+      <td>Ambrane Unbreakable 60W / 3A Fast Charging 1.5...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>199</td>
+      <td>349</td>
+      <td>43</td>
+      <td>4.0</td>
+      <td>43994</td>
+      <td>Compatible with all Type C enabled devices, be...</td>
+      <td>AECPFYFQVRUWC3KGNLJIOREFP5LQ,AGYYVPDD7YG7FYNBX...</td>
+      <td>ArdKn,Nirbhay kumar,Sagar Viswanathan,Asp,Plac...</td>
+      <td>RGIQEG07R9HS2,R1SMWZQ86XIN8U,R2J3Y1WL29GWDE,RY...</td>
+      <td>A Good Braided Cable for Your Type C Device,Go...</td>
+      <td>I ordered this cable to connect my phone to An...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Ambrane-Unbreakable-Char...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>B096MSW6CT</td>
+      <td>Sounce Fast Phone Charging Cable &amp; Data Sync U...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>199</td>
+      <td>1899</td>
+      <td>90</td>
+      <td>3.9</td>
+      <td>7928</td>
+      <td>【 Fast Charger&amp; Data Sync】-With built-in safet...</td>
+      <td>AGU3BBQ2V2DDAMOAKGFAWDDQ6QHA,AESFLDV2PT363T2AQ...</td>
+      <td>Kunal,Himanshu,viswanath,sai niharka,saqib mal...</td>
+      <td>R3J3EQQ9TZI5ZJ,R3E7WBGK7ID0KV,RWU79XKQ6I1QF,R2...</td>
+      <td>Good speed for earlier versions,Good Product,W...</td>
+      <td>Not quite durable and sturdy,https://m.media-a...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Sounce-iPhone-Charging-C...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>B08HDJ86NZ</td>
+      <td>boAt Deuce USB 300 2 in 1 Type-C &amp; Micro USB S...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>329</td>
+      <td>699</td>
+      <td>53</td>
+      <td>4.2</td>
+      <td>94363</td>
+      <td>The boAt Deuce USB 300 2 in 1 cable is compati...</td>
+      <td>AEWAZDZZJLQUYVOVGBEUKSLXHQ5A,AG5HTSFRRE6NL3M5S...</td>
+      <td>Omkar dhale,JD,HEMALATHA,Ajwadh a.,amar singh ...</td>
+      <td>R3EEUZKKK9J36I,R3HJVYCLYOY554,REDECAZ7AMPQC,R1...</td>
+      <td>Good product,Good one,Nice,Really nice product...</td>
+      <td>Good product,long wire,Charges good,Nice,I bou...</td>
+      <td>https://m.media-amazon.com/images/I/41V5FtEWPk...</td>
+      <td>https://www.amazon.in/Deuce-300-Resistant-Tang...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>B08CF3B7N1</td>
+      <td>Portronics Konnect L 1.2M Fast Charging 3A 8 P...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>154</td>
+      <td>399</td>
+      <td>61</td>
+      <td>4.2</td>
+      <td>16905</td>
+      <td>[CHARGE &amp; SYNC FUNCTION]- This cable comes wit...</td>
+      <td>AE3Q6KSUK5P75D5HFYHCRAOLODSA,AFUGIFH5ZAFXRDSZH...</td>
+      <td>rahuls6099,Swasat Borah,Ajay Wadke,Pranali,RVK...</td>
+      <td>R1BP4L2HH9TFUP,R16PVJEXKV6QZS,R2UPDB81N66T4P,R...</td>
+      <td>As good as original,Decent,Good one for second...</td>
+      <td>Bought this instead of original apple, does th...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Portronics-Konnect-POR-1...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'discounted_price'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'discounted_price'</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'actual_price'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'actual_price'</span>])</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'discount_percentage'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'discount_percentage'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>ValueError: Unable to parse string "|" at position 1277</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">'rating'</span>] <span class="op">==</span> <span class="st">'|'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>product_id</th>
+      <th>product_name</th>
+      <th>category</th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+      <th>about_product</th>
+      <th>user_id</th>
+      <th>user_name</th>
+      <th>review_id</th>
+      <th>review_title</th>
+      <th>review_content</th>
+      <th>img_link</th>
+      <th>product_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1279</th>
+      <td>B08L12N5H1</td>
+      <td>Eureka Forbes car Vac 100 Watts Powerful Sucti...</td>
+      <td>Home&amp;Kitchen|Kitchen&amp;HomeAppliances|Vacuum,Cle...</td>
+      <td>2099.0</td>
+      <td>2499.0</td>
+      <td>16</td>
+      <td>|</td>
+      <td>992</td>
+      <td>No Installation is provided for this product|1...</td>
+      <td>AGTDSNT2FKVYEPDPXAA673AIS44A,AER2XFSWNN4LAUCJ5...</td>
+      <td>Divya,Dr Nefario,Deekshith,Preeti,Prasanth R,P...</td>
+      <td>R2KKTKM4M9RDVJ,R1O692MZOBTE79,R2WRSEWL56SOS4,R...</td>
+      <td>Decent product,doesn't pick up sand,Ok ok,Must...</td>
+      <td>Does the job well,doesn't work on sand. though...</td>
+      <td>https://m.media-amazon.com/images/W/WEBP_40237...</td>
+      <td>https://www.amazon.in/Eureka-Forbes-Vacuum-Cle...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df.drop(index <span class="op">=</span> <span class="dv">1279</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'rating'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'rating'</span>])</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'rating_count'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'rating_count'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop duplicate data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df.duplicated(keep <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>0       False
+1       False
+2       False
+3       False
+4       False
+        ...  
+1460    False
+1461    False
+1462    False
+1463    False
+1464    False
+Length: 1462, dtype: bool</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>(1462, 16)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+Int64Index: 1462 entries, 0 to 1464
+Data columns (total 16 columns):
+ #   Column               Non-Null Count  Dtype  
+---  ------               --------------  -----  
+ 0   product_id           1462 non-null   object 
+ 1   product_name         1462 non-null   object 
+ 2   category             1462 non-null   object 
+ 3   discounted_price     1462 non-null   float64
+ 4   actual_price         1462 non-null   float64
+ 5   discount_percentage  1462 non-null   int64  
+ 6   rating               1462 non-null   float64
+ 7   rating_count         1462 non-null   int64  
+ 8   about_product        1462 non-null   object 
+ 9   user_id              1462 non-null   object 
+ 10  user_name            1462 non-null   object 
+ 11  review_id            1462 non-null   object 
+ 12  review_title         1462 non-null   object 
+ 13  review_content       1462 non-null   object 
+ 14  img_link             1462 non-null   object 
+ 15  product_link         1462 non-null   object 
+dtypes: float64(3), int64(2), object(11)
+memory usage: 194.2+ KB</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics of the dataset</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>3129.981826</td>
+      <td>5453.087743</td>
+      <td>47.672367</td>
+      <td>4.096717</td>
+      <td>18307.376881</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>6950.548042</td>
+      <td>10884.467444</td>
+      <td>21.613905</td>
+      <td>0.289497</td>
+      <td>42766.096572</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>39.000000</td>
+      <td>39.000000</td>
+      <td>0.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>325.000000</td>
+      <td>800.000000</td>
+      <td>32.000000</td>
+      <td>4.000000</td>
+      <td>1191.500000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>799.000000</td>
+      <td>1670.000000</td>
+      <td>50.000000</td>
+      <td>4.100000</td>
+      <td>5179.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1999.000000</td>
+      <td>4321.250000</td>
+      <td>63.000000</td>
+      <td>4.300000</td>
+      <td>17342.250000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>77990.000000</td>
+      <td>139900.000000</td>
+      <td>94.000000</td>
+      <td>5.000000</td>
+      <td>426973.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df.describe(include <span class="op">=</span> <span class="st">'all'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>product_id</th>
+      <th>product_name</th>
+      <th>category</th>
+      <th>discounted_price</th>
+      <th>actual_price</th>
+      <th>discount_percentage</th>
+      <th>rating</th>
+      <th>rating_count</th>
+      <th>about_product</th>
+      <th>user_id</th>
+      <th>user_name</th>
+      <th>review_id</th>
+      <th>review_title</th>
+      <th>review_content</th>
+      <th>img_link</th>
+      <th>product_link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462.000000</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+      <td>1462</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>1348</td>
+      <td>1334</td>
+      <td>211</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1290</td>
+      <td>1191</td>
+      <td>1191</td>
+      <td>1191</td>
+      <td>1191</td>
+      <td>1209</td>
+      <td>1409</td>
+      <td>1462</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>B07JW9H4J1</td>
+      <td>Fire-Boltt Ninja Call Pro Plus 1.83" Smart Wat...</td>
+      <td>Computers&amp;Accessories|Accessories&amp;Peripherals|...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>[CHARGE &amp; SYNC FUNCTION]- This cable comes wit...</td>
+      <td>AHIKJUDTVJ4T6DV6IUGFYZ5LXMPA,AE55KTFVNXYFD5FPY...</td>
+      <td>$@|\|TO$|-|,Sethu madhav,Akash Thakur,Burger P...</td>
+      <td>R3F4T5TRYPTMIG,R3DQIEC603E7AY,R1O4Z15FD40PV5,R...</td>
+      <td>Worked on iPhone 7 and didn’t work on XR,Good ...</td>
+      <td>I am not big on camera usage, personally. I wa...</td>
+      <td>https://m.media-amazon.com/images/I/413sCRKobN...</td>
+      <td>https://www.amazon.in/Wayona-Braided-WN3LG1-Sy...</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>3</td>
+      <td>5</td>
+      <td>231</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6</td>
+      <td>10</td>
+      <td>10</td>
+      <td>10</td>
+      <td>10</td>
+      <td>8</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3129.981826</td>
+      <td>5453.087743</td>
+      <td>47.672367</td>
+      <td>4.096717</td>
+      <td>18307.376881</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>6950.548042</td>
+      <td>10884.467444</td>
+      <td>21.613905</td>
+      <td>0.289497</td>
+      <td>42766.096572</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>39.000000</td>
+      <td>39.000000</td>
+      <td>0.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>325.000000</td>
+      <td>800.000000</td>
+      <td>32.000000</td>
+      <td>4.000000</td>
+      <td>1191.500000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>799.000000</td>
+      <td>1670.000000</td>
+      <td>50.000000</td>
+      <td>4.100000</td>
+      <td>5179.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1999.000000</td>
+      <td>4321.250000</td>
+      <td>63.000000</td>
+      <td>4.300000</td>
+      <td>17342.250000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>77990.000000</td>
+      <td>139900.000000</td>
+      <td>94.000000</td>
+      <td>5.000000</td>
+      <td>426973.000000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<section id="exploratory-data-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-visualizations">Exploratory Data Visualizations</h2>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What's the most common rating in this dataset?</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'rating'</span>].plot(kind <span class="op">=</span> <span class="st">'hist'</span>, bins <span class="op">=</span> <span class="dv">10</span>, color <span class="op">=</span> <span class="st">'lightblue'</span>, title <span class="op">=</span> <span class="st">'Rating Frequency'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Data-Analysis-of-Amazon-Sales-Dataset_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot of discount percentage</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df.plot(y <span class="op">=</span> <span class="st">'discount_percentage'</span>, kind <span class="op">=</span> <span class="st">'box'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Data-Analysis-of-Amazon-Sales-Dataset_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Percentage frequency of discounts for products with ratings greater than 4.0 </span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>truncted_data <span class="op">=</span> df.loc[df[<span class="st">'rating'</span>] <span class="op">&gt;</span> <span class="fl">4.0</span>]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>truncted_data.plot.hist(y <span class="op">=</span> <span class="st">'discount_percentage'</span>, color <span class="op">=</span> <span class="st">'lightblue'</span>, bins <span class="op">=</span> <span class="dv">5</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="76">
+<pre><code>&lt;AxesSubplot: ylabel='Frequency'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="Data-Analysis-of-Amazon-Sales-Dataset_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'category'</span>].unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning Product Category</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'grouped_category'</span>] <span class="op">=</span> df[<span class="st">'category'</span>].<span class="bu">str</span>.split(<span class="st">'|'</span>).<span class="bu">str</span>[<span class="dv">0</span>]</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>df.drop(<span class="st">'category'</span>, axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>KeyError: 'category'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="92">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'grouped_category'</span>].unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="92">
+<pre><code>array(['Computers&amp;Accessories', 'Electronics', 'MusicalInstruments',
+       'OfficeProducts', 'Home&amp;Kitchen', 'HomeImprovement', 'Toys&amp;Games',
+       'Car&amp;Motorbike', 'Health&amp;PersonalCare'], dtype=object)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="115">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>grouped_data <span class="op">=</span> df.groupby([<span class="st">'grouped_category'</span>])</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>grouped_data1 <span class="op">=</span> df.groupby([<span class="st">'grouped_category'</span>])[<span class="st">'grouped_category'</span>].count()</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>grouped_data1.plot(y <span class="op">=</span> <span class="st">'grouped_category'</span>, kind <span class="op">=</span> <span class="st">'hist'</span>, </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                   bins <span class="op">=</span> <span class="dv">10</span>, color <span class="op">=</span> <span class="st">'bisque'</span>, </span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                   title <span class="op">=</span> <span class="st">'Most frequent product category'</span>)<span class="op">;</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co"># need to polish-change x-axis' name?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="Data-Analysis-of-Amazon-Sales-Dataset_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="110">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>grouped_data1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="110">
+<pre><code>grouped_category
+Car&amp;Motorbike              1
+Computers&amp;Accessories    451
+Electronics              526
+Health&amp;PersonalCare        1
+Home&amp;Kitchen             447
+HomeImprovement            2
+MusicalInstruments         2
+OfficeProducts            31
+Toys&amp;Games                 1
+Name: grouped_category, dtype: int64</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average product discount percentage per category</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>grouped_data[<span class="st">'discount_percentage'</span>,<span class="st">'grouped_category'</span>].mean().sort_values(</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    by<span class="op">=</span><span class="st">'discount_percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>).plot(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    kind <span class="op">=</span> <span class="st">'bar'</span>, color <span class="op">=</span> <span class="st">'lightgreen'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_204/36321793.py:3: FutureWarning: Indexing with multiple keys (implicitly converted to a tuple of keys) will be deprecated, use a list instead.
+  grouped_data['discount_percentage','grouped_category'].mean().sort_values(
+/tmp/ipykernel_204/36321793.py:3: FutureWarning: The default value of numeric_only in DataFrameGroupBy.mean is deprecated. In a future version, numeric_only will default to False. Either specify numeric_only or select only columns which should be valid for the function.
+  grouped_data['discount_percentage','grouped_category'].mean().sort_values(</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="Data-Analysis-of-Amazon-Sales-Dataset_files/figure-html/cell-36-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="data-analysis-data-visualizations" class="level1">
+<h1>Data Analysis &amp; Data Visualizations</h1>
+<p>In this section, I will focus on analyzing what users say about the product, analyzing the words that appear most often in the review; analyzing the overall sentiment for each product type</p>
+<p>Potential visualizations: - Graph of the relationship between product price and user rating of the product - Percentage of discounts for product categories (product category with &gt;2 occurrences) - Histogram of frequency of (negative/positive) words (maybe top20) - Overall sentiment score ploe for different product category (interactive?)</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
