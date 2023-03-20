@@ -1,0 +1,20 @@
+{
+  "posts/welcome/index.qmd": {
+    "index.html": "5549f1f9"
+  },
+  "posts/first_file.ipynb": {
+    "first_file.html": "032034a5"
+  },
+  "posts/post-with-code/index.qmd": {
+    "index.html": "ec60f776"
+  },
+  "about.qmd": {
+    "about.html": "326f9499"
+  },
+  "index.qmd": {
+    "index.html": "ddf80fca"
+  },
+  "posts/Data-Analysis-of-Amazon-Sales-Dataset.ipynb": {
+    "Data-Analysis-of-Amazon-Sales-Dataset.html": "252eaf67"
+  }
+}
